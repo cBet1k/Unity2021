@@ -6,59 +6,53 @@ using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 0;
+    private int count;
     public TextMeshProUGUI countText;
     public GameObject winTextObject;
+   
 
+    public float speed = 0;
     private Rigidbody rb;
-    private int count;
     private float movementX;
     private float movementY;
-
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         count = 0;
-
         SetCountText();
         winTextObject.SetActive(false);
     }
 
-    private void OnMove(InputValue movementValue)
+    void OnMove(InputValue movementValue)
     {
         Vector2 movementVector = movementValue.Get<Vector2>();
 
         movementX = movementVector.x;
         movementY = movementVector.y;
     }
-
-    private void FixedUpdate()
-    {
-        Vector3 movement = new Vector3(movementX, 0.0f, movementY);
-
-        rb.AddForce(movement * speed);
-    }
-
     void SetCountText()
     {
-        countText.text = "Count:" + count.ToString();
-
+        countText.text = "Count: " + count.ToString();
         if (count >= 8)
         {
             winTextObject.SetActive(true);
         }
     }
 
+    void FixedUpdate()
+    {
+        Vector3 movement = new Vector3(movementX, 0.0f, movementY);
+
+        rb.AddForce(movement * speed);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("PickUp"))
-        {
+        { 
             other.gameObject.SetActive(false);
-            count = count + 1;
-
+            count++;
             SetCountText();
         }
     }
-
 }
